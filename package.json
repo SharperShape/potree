@@ -8,7 +8,10 @@
     "test": "npm run lint"
   },
   "main": "build/potree/potree.js",
-  "files": ["build", "libs"],
+  "files": [
+    "build",
+    "libs"
+  ],
   "devDependencies": {
     "eslint": "^4.18.2",
     "eslint-config-happiness": "^10.2.1",

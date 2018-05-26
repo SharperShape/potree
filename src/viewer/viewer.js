@@ -196,7 +196,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 
 		// start rendering!
 		if(args.useDefaultRenderLoop === undefined || args.useDefaultRenderLoop === true){
-			requestAnimationFrame(this.loop.bind(this));
+			this.requestAnimationFrameId = requestAnimationFrame(this.loop.bind(this));
 		}
 
 		this.loadGUI = this.loadGUI.bind(this);
@@ -1562,7 +1562,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 	}
 
 	loop(timestamp){
-		requestAnimationFrame(this.loop.bind(this));
+		this.requestAnimationFrameId = requestAnimationFrame(this.loop.bind(this));
 
 		let queryAll;
 		if(Potree.measureTimings){
@@ -1624,5 +1624,10 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 		}
 
 		return message;
+	}
+
+	dispose() {
+		if (this.requestAnimationFrameId)
+			cancelAnimationFrame(this.requestAnimationFrameId);
 	}
 };
