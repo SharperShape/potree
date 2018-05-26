@@ -122,3 +122,5 @@ BinaryHeap.prototype = {
     }
   }
 };
+
+window.BinaryHeap = BinaryHeap;
