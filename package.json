@@ -5,7 +5,8 @@
   "description": "WebGL point cloud viewer",
   "scripts": {
     "lint": "eslint src",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "build": "babel build/potree/potree.js --out-dir ."
   },
   "main": "build/potree/potree.js",
   "files": [
@@ -13,6 +14,10 @@
     "libs"
   ],
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "eslint": "^4.18.2",
     "eslint-config-happiness": "^10.2.1",
     "eslint-plugin-import": "^2.9.0",
