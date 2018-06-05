@@ -113,8 +113,16 @@ Potree.webgl = {
 Potree.debug = {};
 
 Potree.scriptPath = null;
-if (document.currentScript.src) {
-	Potree.scriptPath = new URL(document.currentScript.src + '/..').href;
+// TODO http://2ality.com/2014/05/current-script.html
+// There are two situations where this snippet will fail, 
+// though. When a script is loaded asynchronously using <script async>
+// With <script defer> we don’t see this limitation
+var currentScript = document.currentScript || (function() {
+  var scripts = document.getElementsByTagName('script');
+  return scripts[scripts.length - 1];
+})();
+if (currentScript.src) {
+	Potree.scriptPath = new URL(currentScript.src + '/..').href;
 	if (Potree.scriptPath.slice(-1) === '/') {
 		Potree.scriptPath = Potree.scriptPath.slice(0, -1);
 	}
@@ -18663,6 +18671,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 
 		// start rendering!
 		if(args.useDefaultRenderLoop === undefined || args.useDefaultRenderLoop === true){
+			this.loop();
 			this.requestAnimationFrameId = requestAnimationFrame(this.loop.bind(this));
 		}
 

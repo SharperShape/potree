@@ -196,6 +196,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 
 		// start rendering!
 		if(args.useDefaultRenderLoop === undefined || args.useDefaultRenderLoop === true){
+			this.loop();
 			this.requestAnimationFrameId = requestAnimationFrame(this.loop.bind(this));
 		}
 
