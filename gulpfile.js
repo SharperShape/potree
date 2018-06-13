@@ -104,6 +104,7 @@ let paths = {
 	],
 	html: [
 		"src/viewer/potree.css",
+		"src/viewer/potree.scss",
 		"src/viewer/sidebar.html",
 		"src/viewer/profile.html"
 	],
