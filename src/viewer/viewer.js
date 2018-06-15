@@ -13,6 +13,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 		<div id="message_listing" 
 			style="position: absolute; z-index: 1000; left: 10px; bottom: 10px">
 		</div>`);
+		this.domElement = domElement;
 		$(domElement).append(this.elMessages);
 		
 		try{
@@ -270,7 +271,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 		});
 
 		{ // Annotations
-			$('.annotation').detach();
+			$(this.domElement).find('.annotation').detach();
 
 			// for(let annotation of this.scene.annotations){
 			//	this.renderArea.appendChild(annotation.domElement[0]);
@@ -286,7 +287,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 
 					e.annotation.traverse(node => {
 
-						$("#potree_annotation_container").append(node.domElement);
+						$(this.domElement).find("#potree_annotation_container").append(node.domElement);
 						//this.renderArea.appendChild(node.domElement[0]);
 						node.scene = this.scene;
 					});
