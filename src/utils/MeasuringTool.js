@@ -19,7 +19,10 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 
 		this.viewer.inputHandler.registerInteractiveScene(this.scene);
 
-		this.onRemove = (e) => { this.scene.remove(e.measurement);};
+		this.onRemove = (e) => {
+			if (this.cancel && this.cancel.callback) this.cancel.callback();
+			this.scene.remove(e.measurement);
+		};
 		this.onAdd = e => {this.scene.add(e.measurement);};
 
 		for(let measurement of viewer.scene.measurements){
@@ -65,7 +68,7 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 
 		this.scene.add(measure);
 
-		let cancel = {
+		let cancel = this.cancel = {
 			removeLastMarker: measure.maxMarkers > 3,
 			callback: null
 		};
