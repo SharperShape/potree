@@ -20,7 +20,10 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 		this.viewer.inputHandler.registerInteractiveScene(this.scene);
 
 		this.onRemove = (e) => {
+			// TODO: not original code, fix disabling distance
 			if (this.cancel && this.cancel.callback) this.cancel.callback();
+			this.viewer.inputHandler.drag = null;
+			//
 			this.scene.remove(e.measurement);
 		};
 		this.onAdd = e => {this.scene.add(e.measurement);};
