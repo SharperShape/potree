@@ -133,7 +133,8 @@ class EDLRenderer{
 			let result = Potree.updatePointClouds(
 				viewer.scene.pointclouds, 
 				viewer.scene.getActiveCamera(), 
-				viewer.renderer);
+				viewer.renderer,
+				viewer.lru);
 			Potree.pointBudget = oldBudget;
 		}
 

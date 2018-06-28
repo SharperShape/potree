@@ -369,16 +369,12 @@ Potree.loadPointCloud = function (path, name, callback) {
 };
 /* eslint-enable standard/no-callback-literal */
 
-Potree.updatePointClouds = function (pointclouds, camera, renderer) {
-	if (!Potree.lru) {
-		Potree.lru = new LRU();
-	}
-
+Potree.updatePointClouds = function (pointclouds, camera, renderer, lru) {
 	for (let pointcloud of pointclouds) {
 		let start = performance.now();
 
 		for (let profileRequest of pointcloud.profileRequests) {
-			profileRequest.update();
+			profileRequest.update(lru);
 
 			let duration = performance.now() - start;
 			if(duration > 5){
@@ -389,24 +385,16 @@ Potree.updatePointClouds = function (pointclouds, camera, renderer) {
 		let duration = performance.now() - start;
 	}
 
-	let result = Potree.updateVisibility(pointclouds, camera, renderer);
+	let result = Potree.updateVisibility(pointclouds, camera, renderer, lru);
 
 	for (let pointcloud of pointclouds) {
 		pointcloud.updateMaterial(pointcloud.material, pointcloud.visibleNodes, camera, renderer);
 		pointcloud.updateVisibleBounds();
 	}
 
-	Potree.getLRU().freeMemory();
+	lru.freeMemory();
 
 	return result;
-};
-
-Potree.getLRU = function () {
-	if (!Potree.lru) {
-		Potree.lru = new LRU();
-	}
-
-	return Potree.lru;
 };
 
 Potree.updateVisibilityStructures = function(pointclouds, camera, renderer) {
@@ -484,7 +472,7 @@ Potree.getDEMWorkerInstance = function () {
 };
 
 
-Potree.updateVisibility = function(pointclouds, camera, renderer){
+Potree.updateVisibility = function(pointclouds, camera, renderer, lru){
 
 	let numVisibleNodes = 0;
 	let numVisiblePoints = 0;
@@ -666,7 +654,7 @@ Potree.updateVisibility = function(pointclouds, camera, renderer){
 		}
 
 		if (node.isTreeNode()) {
-			Potree.getLRU().touch(node.geometryNode);
+			lru.touch(node.geometryNode);
 			node.sceneNode.visible = true;
 			node.sceneNode.material = pointcloud.material;
 

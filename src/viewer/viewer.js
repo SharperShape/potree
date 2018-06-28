@@ -7,7 +7,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 		this.renderArea = domElement;
 		this.guiLoaded = false;	
 		this.guiLoadTasks = [];
-
+		this.lru = new LRU();
 		this.messages = [];
 		this.elMessages = $(`
 		<div id="message_listing" 
@@ -1234,7 +1234,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 		}
 
 		if (!this.freeze) {
-			let result = Potree.updatePointClouds(scene.pointclouds, camera, this.renderer);
+			let result = Potree.updatePointClouds(scene.pointclouds, camera, this.renderer, this.lru);
 
 			if(result.lowestSpacing !== Infinity){
 				let near = result.lowestSpacing * 10.0;

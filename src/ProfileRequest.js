@@ -92,9 +92,9 @@ Potree.ProfileRequest = class ProfileRequest {
 		}
 	}
 
-	update(){
+	update(lru){
 		if(!this.updateGeneratorInstance){
-			this.updateGeneratorInstance = this.updateGenerator();
+			this.updateGeneratorInstance = this.updateGenerator(lru);
 		}
 
 		let result = this.updateGeneratorInstance.next();
@@ -103,7 +103,7 @@ Potree.ProfileRequest = class ProfileRequest {
 		}
 	}
 
-	* updateGenerator(){
+	* updateGenerator(lru){
 		// load nodes in queue
 		// if hierarchy expands, also load nodes from expanded hierarchy
 		// once loaded, add data to this.points and remove node from queue
@@ -125,7 +125,7 @@ Potree.ProfileRequest = class ProfileRequest {
 			if (node.loaded) {
 				// add points to result
 				intersectedNodes.push(node);
-				Potree.getLRU().touch(node);
+				lru.touch(node);
 				this.highestLevelServed = Math.max(node.getLevel(), this.highestLevelServed);
 
 				let doTraverse = (node.level % node.pcoGeometry.hierarchyStepSize) === 0 && node.hasChildren;
