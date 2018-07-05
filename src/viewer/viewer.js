@@ -197,8 +197,8 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 
 		// start rendering!
 		if(args.useDefaultRenderLoop === undefined || args.useDefaultRenderLoop === true){
+			// call first loop immediately
 			this.loop();
-			this.requestAnimationFrameId = requestAnimationFrame(this.loop.bind(this));
 		}
 
 		this.loadGUI = this.loadGUI.bind(this);
@@ -1402,7 +1402,6 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 
 		try{
 
-
 		if(this.useRep){
 			if (!this.repRenderer) {
 				this.repRenderer = new RepRenderer(this);
@@ -1629,7 +1628,9 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 	}
 
 	dispose() {
-		if (this.requestAnimationFrameId)
+		if (this.requestAnimationFrameId) {
 			cancelAnimationFrame(this.requestAnimationFrameId);
+			this.requestAnimationFrameId=undefined;
+		}
 	}
 };
