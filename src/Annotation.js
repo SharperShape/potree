@@ -27,6 +27,7 @@ Potree.Annotation = class extends THREE.EventDispatcher {
 		this.cameraTarget = (args.cameraTarget instanceof Array)
 			? new THREE.Vector3().fromArray(args.cameraTarget) : args.cameraTarget;
 		this.radius = args.radius;
+		this.id = args.id;
 		this.view = args.view || null;
 		this.keepOpen = false;
 		this.descriptionVisible = false;
