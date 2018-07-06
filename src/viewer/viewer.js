@@ -197,7 +197,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 
 		// start rendering!
 		if(args.useDefaultRenderLoop === undefined || args.useDefaultRenderLoop === true){
-			// call first loop immediately
+			// call first loop immediately, because this.getControls can be null for some reason
 			this.loop();
 		}
 
