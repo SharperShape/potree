@@ -608,6 +608,21 @@ Potree.utils = class {
 		document.body.removeChild(textArea);
 
 	}
+
+	static formatToUnit (value, code) {
+		if (code === 'ft') {
+			if (value >= 1609344) {
+			return { value: (value / 1609.344).toFixed(0), code: 'mi' };
+			} else if (value >= 160934.4) {
+			return { value: (value / 1609.344).toFixed(1), code: 'mi' };
+			} else if (value >= 1609.344) {
+			return { value: (value / 1609.344).toFixed(2), code: 'mi' };
+			} else {
+			return { value: (value / 0.3048).toFixed(0), code: 'ft' };
+			}
+		}
+		return { value: Number(value).toFixed(2), code: 'm' };
+	};
 };
 
 Potree.utils.screenPass = new function () {

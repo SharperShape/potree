@@ -370,7 +370,8 @@ Potree.Measure = class Measure extends THREE.Object3D {
 				let distance = point.position.distanceTo(nextPoint.position);
 
 				edgeLabel.position.copy(center);
-				edgeLabel.setText(Potree.utils.addCommas(distance.toFixed(2)) + ' ' + this.lengthUnit.code);
+				const formattedDistance = Potree.utils.formatToUnit(distance, this.lengthUnit.code);
+				edgeLabel.setText(Potree.utils.addCommas(formattedDistance.value) + ' ' + formattedDistance.code);
 				edgeLabel.visible = this.showDistances && (index < lastIndex || this.closed) && this.points.length >= 2 && distance > 0;
 			}
 
@@ -428,7 +429,8 @@ Potree.Measure = class Measure extends THREE.Object3D {
 
 				let heightLabelPosition = start.clone().add(end).multiplyScalar(0.5);
 				this.heightLabel.position.copy(heightLabelPosition);
-				let msg = Potree.utils.addCommas(height.toFixed(2)) + ' ' + this.lengthUnit.code;
+				const formattedHeight = Potree.utils.formatToUnit(height, this.lengthUnit.code);
+				let msg = Potree.utils.addCommas(formattedHeight.value) + ' ' + formattedHeight.code;
 				this.heightLabel.setText(msg);
 			}
 		}
