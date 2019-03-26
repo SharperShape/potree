@@ -330,7 +330,7 @@ Potree.loadPointCloud = function (path, name, callback) {
 
 	// load pointcloud
 	if (!path) {
-		// TODO: callback? comment? Hello? Bueller? Anyone?
+		callback({type: 'pointcloud_error', error: new Error('No url provided')});
 	} else if (path.indexOf('greyhound://') === 0) {
 		// We check if the path string starts with 'greyhound:', if so we assume it's a greyhound server URL.
 		Potree.GreyhoundLoader.load(path, function (geometry) {
@@ -345,8 +345,9 @@ Potree.loadPointCloud = function (path, name, callback) {
 	} else if (path.indexOf('cloud.js') > 0) {
 		Potree.POCLoader.load(path, function (geometry) {
 			if (!geometry) {
-				//callback({type: 'loading_failed'});
-				console.error(new Error(`failed to load point cloud from URL: ${path}`));
+				const error = new Error(`failed to load point cloud from URL: ${path}`);
+				console.error(error);
+				callback({type: 'pointcloud_error', error});
 			} else {
 				let pointcloud = new Potree.PointCloudOctree(geometry);
 				loaded(pointcloud);

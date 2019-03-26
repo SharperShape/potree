@@ -118,7 +118,12 @@ Potree.POCLoader.load = function load (url, callback) {
 				callback(pco);
 			}
 		};
-
+		
+		xhr.onloadend = function() {
+			if (xhr.status !== 200) {
+				callback();
+			}
+		};
 		xhr.send(null);
 	} catch (e) {
 		console.log("loading failed: '" + url + "'");
