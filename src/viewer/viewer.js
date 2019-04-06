@@ -59,6 +59,8 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 		this.edlStrength = 1.0;
 		this.edlRadius = 1.4;
 		this.useEDL = false;
+		this.autoPointcloudSpeed = true;
+
 		this.classifications = {
 			0: { visible: true, name: 'never classified' },
 			1: { visible: true, name: 'unclassified' },
@@ -148,7 +150,7 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 			this.clippingTool.setScene(this.scene);
 			
 			let onPointcloudAdded = (e) => {
-				if (this.scene.pointclouds.length === 1) {
+				if (this.scene.pointclouds.length === 1 && this.autoPointcloudSpeed) {
 					let speed = e.pointcloud.boundingBox.getSize().length();
 					speed = speed / 5;
 					this.setMoveSpeed(speed);
@@ -496,6 +498,18 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 
 	getFOV () {
 		return this.fov;
+	};
+
+	setAutoPointcloudSpeed (value) {
+		value = Boolean(value);
+		if (this.autoPointcloudSpeed !== value) {
+			this.autoPointcloudSpeed = value;
+			this.dispatchEvent({'type': 'autoPointcloudSpeed_changed', 'viewer': this});
+		}
+	};
+
+	getAutoPointcloudSpeed () {
+		return this.autoPointcloudSpeed;
 	};
 
 	disableAnnotations () {
