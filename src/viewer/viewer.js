@@ -1646,5 +1646,8 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 			cancelAnimationFrame(this.requestAnimationFrameId);
 			this.requestAnimationFrameId=undefined;
 		}
+		if (this.fpControls) {
+			this.fpControls.dispose();
+		}
 	}
 };

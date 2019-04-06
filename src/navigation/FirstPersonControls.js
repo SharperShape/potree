@@ -41,7 +41,7 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 		this.pitchDelta = 0;
 		this.translationDelta = new THREE.Vector3(0, 0, 0);
 		this.translationWorldDelta = new THREE.Vector3(0, 0, 0);
-
+		this.pressedKeys = {};
 		this.tweens = [];
 
 		let drag = (e) => {
@@ -92,9 +92,20 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 		let dblclick = (e) => {
 			this.zoomToLocation(e.mouse);
 		};
+		
+		this.onKeyDown = (e) => {
+			this.pressedKeys[e.keyCode] = true;
+		};
+		
+		this.onKeyUp = (e) => {
+			delete this.pressedKeys[e.keyCode];
+			e.preventDefault();
+		};
 
 		this.addEventListener('drag', drag);
 		this.addEventListener('drop', drop);
+		document.addEventListener('keydown', this.onKeyDown, false);
+		document.addEventListener('keyup', this.onKeyUp, false);
 		// this.addEventListener('mousewheel', scroll);
 		// this.addEventListener('dblclick', dblclick);
 	}
@@ -188,14 +199,12 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 		}
 
 		{ // accelerate while input is given
-			let ih = this.viewer.inputHandler;
-
-			let moveForward = this.keys.FORWARD.some(e => ih.pressedKeys[e]);
-			let moveBackward = this.keys.BACKWARD.some(e => ih.pressedKeys[e]);
-			let moveLeft = this.keys.LEFT.some(e => ih.pressedKeys[e]);
-			let moveRight = this.keys.RIGHT.some(e => ih.pressedKeys[e]);
-			let moveUp = this.keys.UP.some(e => ih.pressedKeys[e]);
-			let moveDown = this.keys.DOWN.some(e => ih.pressedKeys[e]);
+			let moveForward = this.keys.FORWARD.some(e => this.pressedKeys[e]);
+			let moveBackward = this.keys.BACKWARD.some(e => this.pressedKeys[e]);
+			let moveLeft = this.keys.LEFT.some(e => this.pressedKeys[e]);
+			let moveRight = this.keys.RIGHT.some(e => this.pressedKeys[e]);
+			let moveUp = this.keys.UP.some(e => this.pressedKeys[e]);
+			let moveDown = this.keys.DOWN.some(e => this.pressedKeys[e]);
 
 			if(this.lockElevation){
 				let dir = view.direction;
@@ -272,5 +281,10 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 			this.translationDelta.multiplyScalar(attenuation);
 			this.translationWorldDelta.multiplyScalar(attenuation);
 		}
+	}
+
+	dispose() {
+		document.removeEventListener('keydown', this.onKeyDown);
+		document.removeEventListener('keyup', this.onKeyUp);
 	}
 };
