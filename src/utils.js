@@ -618,7 +618,7 @@ Potree.utils = class {
 			} else if (value >= 1609.344) {
 			return { value: (value / 1609.344).toFixed(2), code: 'mi' };
 			} else {
-			return { value: (value / 0.3048).toFixed(0), code: 'ft' };
+			return { value: (value / 0.3048).toFixed(1), code: 'ft' };
 			}
 		}
 		return { value: Number(value).toFixed(2), code: 'm' };
