@@ -778,7 +778,7 @@ Potree.PointCloudOctree = class extends Potree.PointCloudTree {
 		gl.readPixels(x, y, pickWindowSize, pickWindowSize, gl.RGBA, gl.UNSIGNED_BYTE, buffer); 
 		
 		renderer.setRenderTarget(null);
-		renderer.resetGLState();
+		renderer.state.reset();
 		renderer.setScissorTest(false);
 		gl.disable(gl.SCISSOR_TEST);
 		
