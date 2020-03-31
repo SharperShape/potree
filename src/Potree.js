@@ -764,7 +764,9 @@ Potree.XHRFactory = {
 
 	createXMLHttpRequest: function () {
 		let xhr = new XMLHttpRequest();
-
+		
+		xhr.withCredentials = this.config.withCredentials;
+		
 		if (this.config.customHeaders &&
 			Array.isArray(this.config.customHeaders) &&
 			this.config.customHeaders.length > 0) {
