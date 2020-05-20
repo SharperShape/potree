@@ -24,6 +24,7 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 		this.sceneControls = new THREE.Scene();
 
 		this.rotationSpeed = 200;
+		this.keyboadRotationSpeed = 3;
 		this.moveSpeed = 10;
 		this.lockElevation = false;
 
@@ -42,6 +43,7 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 		this.translationDelta = new THREE.Vector3(0, 0, 0);
 		this.translationWorldDelta = new THREE.Vector3(0, 0, 0);
 		this.pressedKeys = {};
+		this.shiftDown = false;
 		this.tweens = [];
 
 		let drag = (e) => {
@@ -95,10 +97,12 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 		
 		this.onKeyDown = (e) => {
 			this.pressedKeys[e.keyCode] = true;
+			this.shiftDown = e.shiftKey;
 		};
 		
 		this.onKeyUp = (e) => {
 			delete this.pressedKeys[e.keyCode];
+			this.shiftDown = false;
 			e.preventDefault();
 		};
 
@@ -199,12 +203,17 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 		}
 
 		{ // accelerate while input is given
-			let moveForward = this.keys.FORWARD.some(e => this.pressedKeys[e]);
-			let moveBackward = this.keys.BACKWARD.some(e => this.pressedKeys[e]);
-			let moveLeft = this.keys.LEFT.some(e => this.pressedKeys[e]);
-			let moveRight = this.keys.RIGHT.some(e => this.pressedKeys[e]);
+			let moveForward = !this.shiftDown && this.keys.FORWARD.some(e => this.pressedKeys[e]);
+			let moveBackward = !this.shiftDown && this.keys.BACKWARD.some(e => this.pressedKeys[e]);
+			let moveLeft = !this.shiftDown && this.keys.LEFT.some(e => this.pressedKeys[e]);
+			let moveRight = !this.shiftDown && this.keys.RIGHT.some(e => this.pressedKeys[e]);
 			let moveUp = this.keys.UP.some(e => this.pressedKeys[e]);
 			let moveDown = this.keys.DOWN.some(e => this.pressedKeys[e]);
+
+			let pitchDown = this.shiftDown && this.keys.FORWARD.some(e => this.pressedKeys[e]);
+			let pitchUp = this.shiftDown && this.keys.BACKWARD.some(e => this.pressedKeys[e]);
+			let yawLeft = this.shiftDown && this.keys.LEFT.some(e => this.pressedKeys[e]);
+			let yawRight = this.shiftDown && this.keys.RIGHT.some(e => this.pressedKeys[e]);
 
 			if(this.lockElevation){
 				let dir = view.direction;
@@ -242,6 +251,22 @@ Potree.FirstPersonControls = class FirstPersonControls extends THREE.EventDispat
 				this.translationWorldDelta.z = this.viewer.getMoveSpeed();
 			} else if (moveDown) {
 				this.translationWorldDelta.z = -this.viewer.getMoveSpeed();
+			}
+
+			if (pitchDown && pitchUp) {
+				this.pitchDelta = 0;
+			} else if (pitchDown) {
+				this.pitchDelta = this.keyboadRotationSpeed;
+			} else if (pitchUp) {
+				this.pitchDelta = -this.keyboadRotationSpeed;
+			}
+
+			if (yawLeft && yawRight) {
+				this.yawDelta = 0;
+			} else if (yawLeft) {
+				this.yawDelta = -this.keyboadRotationSpeed;
+			} else if (yawRight) {
+				this.yawDelta = this.keyboadRotationSpeed;
 			}
 		}
 
