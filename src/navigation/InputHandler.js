@@ -36,19 +36,31 @@ Potree.InputHandler = class InputHandler extends THREE.EventDispatcher {
 			this.domElement.tabIndex = 2222;
 		}
 
-		this.domElement.addEventListener('contextmenu', (event) => { event.preventDefault(); }, false);
-		this.domElement.addEventListener('click', this.onMouseClick.bind(this), false);
-		this.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
-		this.domElement.addEventListener('mouseup', this.onMouseUp.bind(this), false);
-		this.domElement.addEventListener('mousemove', this.onMouseMove.bind(this), false);
-		this.domElement.addEventListener('mousewheel', this.onMouseWheel.bind(this), false);
-		this.domElement.addEventListener('DOMMouseScroll', this.onMouseWheel.bind(this), false); // Firefox
-		this.domElement.addEventListener('dblclick', this.onDoubleClick.bind(this));
-		this.domElement.addEventListener('keydown', this.onKeyDown.bind(this));
-		this.domElement.addEventListener('keyup', this.onKeyUp.bind(this));
-		this.domElement.addEventListener('touchstart', this.onTouchStart.bind(this));
-		this.domElement.addEventListener('touchend', this.onTouchEnd.bind(this));
-		this.domElement.addEventListener('touchmove', this.onTouchMove.bind(this));
+		this.systemListeners = [
+			['contextmenu', (event) => { event.preventDefault(); }, false],
+			['click', this.onMouseClick.bind(this), false],
+			['mousedown', this.onMouseDown.bind(this), false],
+			['mouseup', this.onMouseUp.bind(this), false],
+			['mousemove', this.onMouseMove.bind(this), false],
+			['mousewheel', this.onMouseWheel.bind(this), false],
+			['DOMMouseScroll', this.onMouseWheel.bind(this), false],
+			['dblclick', this.onDoubleClick.bind(this)],
+			['keydown', this.onKeyDown.bind(this)],
+			['keyup', this.onKeyUp.bind(this)],
+			['touchstart', this.onTouchStart.bind(this)],
+			['touchend', this.onTouchEnd.bind(this)],
+			['touchmove', this.onTouchMove.bind(this)]
+		];
+
+		this.systemListeners.forEach(([eventName, listener, options]) => {
+			this.domElement.addEventListener(eventName, listener, options);
+		});
+	}
+
+	dispose() {
+		this.systemListeners.forEach(([eventName, listener, options]) => {
+			this.domElement.removeEventListener(eventName, listener, options);
+		});
 	}
 
 	addInputListener (listener) {
