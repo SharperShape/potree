@@ -5,6 +5,7 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 
 		this.viewer = viewer;
 		this.renderer = viewer.renderer;
+		this.cancel = {};
 
 		this.addEventListener('start_inserting_measurement', e => {
 			this.viewer.dispatchEvent({
@@ -21,7 +22,11 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 
 		this.onRemove = (e) => {
 			// TODO: not original code, fix disabling distance
-			if (this.cancel && this.cancel.callback) this.cancel.callback();
+			let name = e.measurement.name;
+			if (this.cancel[name] && this.cancel[name].callback) {
+				this.cancel[name].callback();
+				this.cancel[name] = null;
+			}
 			this.viewer.inputHandler.drag = null;
 			//
 			this.scene.remove(e.measurement);
@@ -71,7 +76,7 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 
 		this.scene.add(measure);
 
-		let cancel = this.cancel = {
+		let cancel = this.cancel[measure.name] = {
 			removeLastMarker: measure.maxMarkers > 3,
 			callback: null
 		};
