@@ -1658,6 +1658,9 @@ Potree.Viewer = class PotreeViewer extends THREE.EventDispatcher{
 		if (this.fpControls) {
 			this.fpControls.dispose();
 		}
+		if (this.earthControls) {
+			this.earthControls.dispose();
+		}
 	}
 
 	cancelLoop() {
