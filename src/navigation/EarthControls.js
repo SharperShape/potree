@@ -15,6 +15,8 @@ Potree.EarthControls = class EarthControls extends THREE.EventDispatcher {
 		this.wheelDelta = 0;
 		this.zoomDelta = new THREE.Vector3();
 		this.camStart = null;
+		
+		this.shiftDown = false;
 
 		this.tweens = [];
 
@@ -48,7 +50,10 @@ Potree.EarthControls = class EarthControls extends THREE.EventDispatcher {
 			let mouse = e.drag.end;
 			let domElement = this.viewer.renderer.domElement;
 
-			if (e.drag.mouse === Potree.MOUSE.LEFT) {
+			if (
+				e.drag.mouse === Potree.MOUSE.LEFT ||
+        (e.drag.mouse === Potree.MOUSE.MIDDLE && !this.shiftDown)
+			) {
 
 				let ray = Potree.utils.mouseToRay(mouse, camStart, domElement.clientWidth, domElement.clientHeight);
 				let plane = new THREE.Plane().setFromNormalAndCoplanarPoint(
@@ -76,7 +81,10 @@ Potree.EarthControls = class EarthControls extends THREE.EventDispatcher {
 						this.viewer.setMoveSpeed(speed);
 					}
 				}
-			} else if (e.drag.mouse === Potree.MOUSE.RIGHT) {
+			} else if (
+				e.drag.mouse === Potree.MOUSE.RIGHT ||
+        (e.drag.mouse === Potree.MOUSE.MIDDLE && this.shiftDown)
+			) {
 				let ndrag = {
 					x: e.drag.lastDrag.x / this.renderer.domElement.clientWidth,
 					y: e.drag.lastDrag.y / this.renderer.domElement.clientHeight
@@ -142,6 +150,17 @@ Potree.EarthControls = class EarthControls extends THREE.EventDispatcher {
 		let dblclick = (e) => {
 			this.zoomToLocation(e.mouse);
 		};
+
+		this.onKeyDown = (e) => {
+			this.shiftDown = e.shiftKey;
+		};
+
+		this.onKeyUp = (e) => {
+			this.shiftDown = false;
+		};
+
+		document.addEventListener('keydown', this.onKeyDown, false);
+		document.addEventListener('keyup', this.onKeyUp, false);
 
 		this.addEventListener('drag', drag);
 		this.addEventListener('drop', drop);
@@ -278,5 +297,10 @@ Potree.EarthControls = class EarthControls extends THREE.EventDispatcher {
 			this.zoomDelta.multiplyScalar(fade);
 			this.wheelDelta = 0;
 		}
+	}
+
+	dispose() {
+		document.removeEventListener('keydown', this.onKeyDown);
+		document.removeEventListener('keyup', this.onKeyUp);
 	}
 };
