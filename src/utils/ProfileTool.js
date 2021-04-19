@@ -84,12 +84,12 @@ Potree.ProfileTool = class ProfileTool extends THREE.EventDispatcher {
 
 		cancel.callback = e => {
 			profile.removeMarker(profile.points.length - 1);
-			domElement.removeEventListener('mouseup', insertionCallback, true);
+			domElement.removeEventListener('mouseup', insertionCallback, false);
 			this.viewer.removeEventListener('cancel_insertions', cancel.callback);
 		};
 
 		this.viewer.addEventListener('cancel_insertions', cancel.callback);
-		domElement.addEventListener('mouseup', insertionCallback, true);
+		domElement.addEventListener('mouseup', insertionCallback, false);
 
 		profile.addMarker(new THREE.Vector3(0, 0, 0));
 		this.viewer.inputHandler.startDragging(
@@ -99,7 +99,7 @@ Potree.ProfileTool = class ProfileTool extends THREE.EventDispatcher {
 
 		return profile;
 	}
-	
+
 	update(){
 		let camera = this.viewer.scene.getActiveCamera();
 		let profiles = this.viewer.scene.profiles;
@@ -110,7 +110,7 @@ Potree.ProfileTool = class ProfileTool extends THREE.EventDispatcher {
 
 		// make size independant of distance
 		for(let profile of profiles){
-			for(let sphere of profile.spheres){				
+			for(let sphere of profile.spheres){
 				let distance = camera.position.distanceTo(sphere.getWorldPosition());
 				let pr = Potree.utils.projectedRadius(1, camera, distance, clientWidth, clientHeight);
 				let scale = (15 / pr);

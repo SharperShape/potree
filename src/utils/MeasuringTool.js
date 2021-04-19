@@ -100,13 +100,13 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 			if (cancel.removeLastMarker) {
 				measure.removeMarker(measure.points.length - 1);
 			}
-			domElement.removeEventListener('mouseup', insertionCallback, true);
+			domElement.removeEventListener('mouseup', insertionCallback, false);
 			this.viewer.removeEventListener('cancel_insertions', cancel.callback);
 		};
 
 		if (measure.maxMarkers > 1) {
 			this.viewer.addEventListener('cancel_insertions', cancel.callback);
-			domElement.addEventListener('mouseup', insertionCallback, true);
+			domElement.addEventListener('mouseup', insertionCallback, false);
 		}
 
 		measure.addMarker(new THREE.Vector3(0, 0, 0));
@@ -117,7 +117,7 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 
 		return measure;
 	}
-	
+
 	update(){
 		let camera = this.viewer.scene.getActiveCamera();
 		let domElement = this.renderer.domElement;
@@ -134,7 +134,7 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 			measure.update();
 
 			// spheres
-			for(let sphere of measure.spheres){			
+			for(let sphere of measure.spheres){
 				let distance = camera.position.distanceTo(sphere.getWorldPosition());
 				let pr = Potree.utils.projectedRadius(1, camera, distance, clientWidth, clientHeight);
 				let scale = (15 / pr);
@@ -164,9 +164,9 @@ Potree.MeasuringTool = class MeasuringTool extends THREE.EventDispatcher {
 				screenPos.z = 0;
 				screenPos.y -= 30;
 
-				let labelPos = new THREE.Vector3( 
-					(screenPos.x / clientWidth) * 2 - 1, 
-					-(screenPos.y / clientHeight) * 2 + 1, 
+				let labelPos = new THREE.Vector3(
+					(screenPos.x / clientWidth) * 2 - 1,
+					-(screenPos.y / clientHeight) * 2 + 1,
 					0.5 );
 				labelPos.unproject(camera);
 				if(this.viewer.scene.cameraMode == Potree.CameraMode.PERSPECTIVE) {
