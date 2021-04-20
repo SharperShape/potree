@@ -1,12 +1,12 @@
 {
   "name": "potree",
   "private": true,
-  "version": "1.6.24",
+  "version": "1.6.25",
   "description": "WebGL point cloud viewer",
   "scripts": {
     "lint": "eslint src",
     "test": "npm run lint",
-	  "watch": "gulp watch",
+    "watch": "gulp watch",
     "build": "gulp build && babel build/potree/potree.js --out-dir ."
   },
   "main": "build/potree/potree.js",
